@@ -84,6 +84,11 @@ public class SignUpActivity extends AppCompatActivity
                         error_zip.setText("");
                     }
                 }
+
+                else
+                {
+
+                }
             }
         });
     }
