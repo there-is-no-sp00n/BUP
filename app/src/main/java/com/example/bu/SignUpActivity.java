@@ -132,7 +132,7 @@ public class SignUpActivity extends AppCompatActivity
                     if(zip.length() == 5)
                     {
                         error_zip.setText("");
-                        //if to check if valid zipcode
+                        //perform zip look up
                     }
                     else
                     {
