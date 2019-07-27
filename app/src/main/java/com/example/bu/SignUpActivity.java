@@ -39,15 +39,17 @@ public class SignUpActivity extends AppCompatActivity
                 String f_name = String.valueOf(first_name.getText());
                 String l_name = String.valueOf(last_name.getText());
                 String phone_num = String.valueOf(phone_num_s_up.getText());
+                phone_num = phone_num.replaceAll("[^0-9]","");
                 String zip = String.valueOf(zipcode.getText());
+
+
+                TextView error_first_name = (TextView) findViewById(R.id.first_name_error);
+                TextView error_last_name = (TextView) findViewById(R.id.last_name_error);
+                TextView error_phone_number = (TextView) findViewById(R.id.phone_number_error);
+                TextView error_zip = (TextView) findViewById(R.id.zip_code_error);
 
                 if(f_name.isEmpty() || l_name.isEmpty() || phone_num.isEmpty() || zip.isEmpty())
                 {
-                    TextView error_first_name = (TextView) findViewById(R.id.first_name_error);
-                    TextView error_last_name = (TextView) findViewById(R.id.last_name_error);
-                    TextView error_phone_number = (TextView) findViewById(R.id.phone_number_error);
-                    TextView error_zip = (TextView) findViewById(R.id.zip_code_error);
-
                     if(f_name.isEmpty())
                     {
                         error_first_name.setText("FIRST NAME CANNOT BE EMPTY!" + "");
@@ -87,7 +89,55 @@ public class SignUpActivity extends AppCompatActivity
 
                 else
                 {
+                    error_first_name.setText("");
+                    error_last_name.setText("");
+                    error_phone_number.setText("");
+                    error_zip.setText("");
 
+
+                    f_name = String.valueOf(first_name.getText());
+                    l_name = String.valueOf(last_name.getText());
+                    phone_num = String.valueOf(phone_num_s_up.getText());
+                    zip = String.valueOf(zipcode.getText());
+
+                    if(f_name.length() > 1)
+                    {
+                        error_first_name.setText("");
+                    }
+
+                    else
+                    {
+                        error_first_name.setText("ENTER VALID FIRST NAME");
+                    }
+
+                    if(l_name.length() > 1)
+                    {
+                        error_last_name.setText("");
+                    }
+                    else
+                    {
+                        error_last_name.setText("ENTER VALID LAST NAME");
+                    }
+
+                    phone_num = phone_num.replaceAll("[^0-9]","");
+                    if(phone_num.length() == 10)
+                    {
+                        error_phone_number.setText("");
+                    }
+                    else
+                    {
+                        error_phone_number.setText("ENTER VALID PHONE NUMBER" + phone_num.length());
+                    }
+
+                    if(zip.length() == 5)
+                    {
+                        error_zip.setText("");
+                        //if to check if valid zipcode
+                    }
+                    else
+                    {
+                        error_zip.setText("ENTER VALID ZIPCODE");
+                    }
                 }
             }
         });
