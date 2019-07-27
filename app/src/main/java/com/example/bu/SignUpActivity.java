@@ -132,7 +132,7 @@ public class SignUpActivity extends AppCompatActivity
                     if(zip.length() == 5)
                     {
                         error_zip.setText("");
-                        //perform zip look up
+                        //perform zip look up from .csv
                     }
                     else
                     {
