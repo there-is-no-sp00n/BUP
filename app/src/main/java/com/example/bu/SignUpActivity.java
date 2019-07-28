@@ -1,5 +1,6 @@
 package com.example.bu;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -20,7 +21,7 @@ public class SignUpActivity extends AppCompatActivity
         setContentView(R.layout.activity_sign_up);
 
 
-        Button button_sign_up_data = (Button) findViewById(R.id.button_sign_up_w_data);
+        final Button button_sign_up_data = (Button) findViewById(R.id.button_sign_up_w_data);
 
         final EditText first_name = (EditText) findViewById(R.id.editText_first_name);
         final EditText last_name = (EditText) findViewById(R.id.editText_last_name);
@@ -49,6 +50,8 @@ public class SignUpActivity extends AppCompatActivity
                 TextView error_last_name = (TextView) findViewById(R.id.last_name_error);
                 TextView error_phone_number = (TextView) findViewById(R.id.phone_number_error);
                 TextView error_zip = (TextView) findViewById(R.id.zip_code_error);
+
+
 
                 if(f_name.isEmpty() || l_name.isEmpty() || phone_num.isEmpty() || zip.isEmpty())
                 {
@@ -112,6 +115,7 @@ public class SignUpActivity extends AppCompatActivity
                     else
                     {
                         error_first_name.setText("ENTER VALID FIRST NAME");
+                        ready_for_verification_code = 0;
                     }
 
                     if(l_name.length() > 1)
@@ -123,6 +127,7 @@ public class SignUpActivity extends AppCompatActivity
                     else
                     {
                         error_last_name.setText("ENTER VALID LAST NAME");
+                        ready_for_verification_code = 0;
                     }
 
                     phone_num = phone_num.replaceAll("[^0-9]","");
@@ -134,7 +139,8 @@ public class SignUpActivity extends AppCompatActivity
                     }
                     else
                     {
-                        error_phone_number.setText("ENTER VALID PHONE NUMBER" + phone_num.length());
+                        error_phone_number.setText("ENTER VALID PHONE NUMBER");
+                        ready_for_verification_code = 0;
                     }
 
                     if(zip.length() == 5)
@@ -147,16 +153,24 @@ public class SignUpActivity extends AppCompatActivity
                     else
                     {
                         error_zip.setText("ENTER VALID ZIPCODE");
+                        ready_for_verification_code = 0;
                     }
                 }
 
-                //System.out.println("Ready indicator: " + ready_for_verification_code);
+                System.out.println("Ready indicator: " + ready_for_verification_code);
 
                 if(ready_for_verification_code == 4)
                 {
                     //meaning all the info in the sign up field is valid and ready for phone number verification
-                    //activate the code enter field
+                    //get the data ready to be stored
+
+
+                    //activate the code enter field activity
+                    startActivity(new Intent(SignUpActivity.this, SignUpVerificationActivity.class));
+
                 }
+
+
             }
         });
     }
