@@ -42,6 +42,8 @@ public class SignUpActivity extends AppCompatActivity
                 phone_num = phone_num.replaceAll("[^0-9]","");
                 String zip = String.valueOf(zipcode.getText());
 
+                int ready_for_verification_code = 0;
+
 
                 TextView error_first_name = (TextView) findViewById(R.id.first_name_error);
                 TextView error_last_name = (TextView) findViewById(R.id.last_name_error);
@@ -102,6 +104,8 @@ public class SignUpActivity extends AppCompatActivity
 
                     if(f_name.length() > 1)
                     {
+                        //meaning first name is good
+                        ready_for_verification_code++;
                         error_first_name.setText("");
                     }
 
@@ -112,6 +116,8 @@ public class SignUpActivity extends AppCompatActivity
 
                     if(l_name.length() > 1)
                     {
+                        //last name is good
+                        ready_for_verification_code++;
                         error_last_name.setText("");
                     }
                     else
@@ -122,6 +128,8 @@ public class SignUpActivity extends AppCompatActivity
                     phone_num = phone_num.replaceAll("[^0-9]","");
                     if(phone_num.length() == 10)
                     {
+                        //phone number good
+                        ready_for_verification_code++;
                         error_phone_number.setText("");
                     }
                     else
@@ -131,6 +139,8 @@ public class SignUpActivity extends AppCompatActivity
 
                     if(zip.length() == 5)
                     {
+                        //zipcode good
+                        ready_for_verification_code++;
                         error_zip.setText("");
                         //perform zip look up from .csv
                     }
@@ -138,6 +148,14 @@ public class SignUpActivity extends AppCompatActivity
                     {
                         error_zip.setText("ENTER VALID ZIPCODE");
                     }
+                }
+
+                //System.out.println("Ready indicator: " + ready_for_verification_code);
+
+                if(ready_for_verification_code == 4)
+                {
+                    //meaning all the info in the sign up field is valid and ready for phone number verification
+                    //activate the code enter field
                 }
             }
         });
