@@ -1,24 +1,46 @@
 package com.example.bu;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
+
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SignUpActivity extends AppCompatActivity
 {
+    public static final String FIRST_NAME = "first name";
+    public static final String LAST_NAME = "last name";
+    public static final String PHONE_NUMBER = "phone number";
+    public static final String ZIP_CODE = "zipcode";
+
+
+    private DocumentReference to_upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
 
 
         final Button button_sign_up_data = (Button) findViewById(R.id.button_sign_up_w_data);
@@ -163,6 +185,30 @@ public class SignUpActivity extends AppCompatActivity
                 {
                     //meaning all the info in the sign up field is valid and ready for phone number verification
                     //get the data ready to be stored
+
+                    Map<String, Object> data_to_save = new HashMap<String, Object>();
+                    data_to_save.put(FIRST_NAME, f_name);
+                    data_to_save.put(LAST_NAME, l_name);
+                    data_to_save.put(PHONE_NUMBER, phone_num);
+                    data_to_save.put(ZIP_CODE, zip);
+
+                    to_upload = FirebaseFirestore.getInstance().document("users/" + UUID.randomUUID());
+
+                    to_upload.set(data_to_save).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            System.out.println("User upload successful!\n");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            System.out.println("User upload failed!\n");
+                        }
+                    });
+
+
 
 
                     //activate the code enter field activity
