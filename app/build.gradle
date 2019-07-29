@@ -35,10 +35,10 @@ dependencies {
 
 
     // FirebaseUI for Firebase Realtime Database
-  //  implementation 'com.firebaseui:firebase-ui-database:5.0.0'
+    //  implementation 'com.firebaseui:firebase-ui-database:5.0.0'
 
     // FirebaseUI for Cloud Firestore
-  //  implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
+    //  implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
 
 
     // FirebaseUI for Firebase Auth
@@ -46,8 +46,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // FirebaseUI for Cloud Storage
-  //  implementation 'com.firebaseui:firebase-ui-storage:5.0.0'
-
+    //  implementation 'com.firebaseui:firebase-ui-storage:5.0.0'
 
 
     testImplementation 'junit:junit:4.12'

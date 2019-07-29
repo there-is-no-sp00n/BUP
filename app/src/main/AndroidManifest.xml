@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignUpVerificationActivity"></activity>
+        <activity android:name=".SignUpInititalWithNumber"></activity>
+        <activity android:name=".SignUpVerificationActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

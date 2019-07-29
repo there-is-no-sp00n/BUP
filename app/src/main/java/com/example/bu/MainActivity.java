@@ -10,12 +10,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    List<AuthUI .IdpConfig> providers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        providers = Arrays.asList(
+                new AuthUI.IdpConfig.PhoneBuilder().build()
+        );
 
         Button button_sign_in = (Button) findViewById(R.id.button_sign_in);
         EditText phone_number = (EditText) findViewById(R.id.field_phone_number);
@@ -27,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+                startActivity(new Intent(MainActivity.this, SignUpInititalWithNumber.class));
             }
         });
 
