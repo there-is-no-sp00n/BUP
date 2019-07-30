@@ -2,13 +2,11 @@ package com.example.bu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.arch.core.executor.TaskExecutor;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,30 +20,26 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-public class SignUpVerificationActivity extends AppCompatActivity {
-
+public class SignInVerificationActivity extends AppCompatActivity {
 
     private FirebaseAuth phAuth;
     private String verificationID;
     private String phone_num;
     private EditText text_input;
-    //private ProgressBar prog_enter_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_verification);
+        setContentView(R.layout.activity_sign_in_verification);
 
-        text_input = (EditText) findViewById(R.id.editText_enter_verify_code) ;
-        Bundle extras = getIntent().getExtras();
-        phone_num = extras.getString("phone");
+        text_input = (EditText) findViewById(R.id.editText_enter_verify_code);
 
-        phone_num = "+1" + phone_num;
         phAuth = FirebaseAuth.getInstance();
 
-      //  prog_enter_code = (ProgressBar) findViewById(R.id.progressBar_enter_code);
+        final Bundle extras = getIntent().getExtras();
 
-        //prog_enter_code.setVisibility(setVisible(1));
+        phone_num = extras.getString("phone");
+
 
         sendVerificationCode(phone_num);
 
@@ -72,11 +66,6 @@ public class SignUpVerificationActivity extends AppCompatActivity {
                 verifyCode(code);
             }
         });
-
-
-      //          );
-
-        System.out.println("I am in verification " + phone_num);
     }
 
     private void verifyCode(String code)
@@ -95,8 +84,8 @@ public class SignUpVerificationActivity extends AppCompatActivity {
                     {
                         if(task.isSuccessful())
                         {
-                            Intent intent = new Intent(getBaseContext(), SignUpActivity.class);
-                            intent.putExtra("phone", phone_num );
+                            Intent intent = new Intent(getBaseContext(), HomeScreenActivity.class);
+                            //intent.putExtra("phone", phone_num );
                             startActivity(intent);
                         }
                         else
@@ -119,7 +108,7 @@ public class SignUpVerificationActivity extends AppCompatActivity {
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-        mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
     {
 
         @Override
@@ -142,10 +131,7 @@ public class SignUpVerificationActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(FirebaseException e)
         {
-            Toast.makeText(SignUpVerificationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(SignInVerificationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
-
 }
-
-

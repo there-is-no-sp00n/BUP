@@ -8,6 +8,7 @@ import androidx.documentfile.provider.DocumentFile;
 
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,13 +59,10 @@ public class SignUpActivity extends AppCompatActivity
 
         final String phone_num = extras.getString("phone");
 
-        String temp = phone_num;
-        temp.replaceFirst("(\\d{1})(\\d{3})(\\d{3})(\\d+)", "($2)-($3)-($4");
-        phone_num_s.setText(temp);
+        String out_to_gui = phone_num;
+        out_to_gui = out_to_gui.substring(0,2) + " " + "(" + out_to_gui.substring(2,5) + ")" + " " + out_to_gui.substring(5,8) + "-" + out_to_gui.substring(8);
+        phone_num_s.setText(out_to_gui);
 
-
-
-        //phone_num_s_up.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
 
 
@@ -108,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity
                   //  phone_num = String.valueOf(phone_num_s_up.getText());
                     zip = String.valueOf(zipcode.getText());
 
-                    if(f_name.length() > 1)
+                    if(f_name.length() > 1 && f_name != null && f_name.matches("^[a-zA-Z]*$"))
                     {
                         //meaning first name is good
                         ready_for_verification_code++;
@@ -120,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity
                         ready_for_verification_code = 0;
                     }
 
-                    if(l_name.length() > 1)
+                    if(l_name.length() > 1 && l_name != null && l_name.matches("^[a-zA-Z]*$"))
                     {
                         //last name is good
                         ready_for_verification_code++;
@@ -159,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity
                     data_to_save.put(PHONE_NUMBER, phone_num);
                     data_to_save.put(ZIP_CODE, zip);
 
-                    System.out.println("AAAAAAAA");
+                    //System.out.println("AAAAAAAA");
                     to_upload = FirebaseFirestore.getInstance().document("users/" + UUID.randomUUID());
 
 
@@ -169,6 +167,11 @@ public class SignUpActivity extends AppCompatActivity
                         public void onSuccess(Void aVoid)
                         {
                             System.out.println("User upload successful!\n");
+                            Intent intent = new Intent(SignUpActivity.this, HomeScreenActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            startActivity(intent);
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

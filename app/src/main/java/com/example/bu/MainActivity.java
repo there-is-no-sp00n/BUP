@@ -59,7 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
                 if(TextUtils.isDigitsOnly(phone_num) && phone_num.length() == 10)
                 {
+                    phone_num = "+1" + phone_num;
                     view_number.setText(phone_num + "");
+                    //need to p[a
+                    Intent intent = new Intent(getBaseContext(), SignInVerificationActivity.class);
+                    intent.putExtra("phone", phone_num );
+
+                    startActivity(intent);
+
                 }
                 else
                 {
