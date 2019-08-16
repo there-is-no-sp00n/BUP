@@ -81,6 +81,7 @@ public class SignUpVerificationActivity extends AppCompatActivity {
 
     private void verifyCode(String code)
     {
+        System.out.println("Sign up: In verifyCode\n");
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
         signInWithCred(credential);
     }
@@ -109,6 +110,7 @@ public class SignUpVerificationActivity extends AppCompatActivity {
 
     private void sendVerificationCode(String number)
     {
+        System.out.println("Sign up: In sendVerificationCode\n");
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
                 60,

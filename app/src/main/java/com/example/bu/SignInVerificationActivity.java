@@ -41,6 +41,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
         phone_num = extras.getString("phone");
 
 
+
         sendVerificationCode(phone_num);
 
         findViewById(R.id.button_verify_code).setOnClickListener(new View.OnClickListener()
@@ -56,7 +57,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
                     text_input.requestFocus();
                     return;
                 }
-                else if(code.length() < 6)
+                else if(code.length() < 6 || code.length() > 6)
                 {
                     text_input.setError("Enter valid code");
                     text_input.requestFocus();
@@ -70,6 +71,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
 
     private void verifyCode(String code)
     {
+        System.out.println("In verifyCode\n");
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
         signInWithCred(credential);
     }
@@ -86,6 +88,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
                         {
                             Intent intent = new Intent(getBaseContext(), HomeScreenActivity.class);
                             //intent.putExtra("phone", phone_num );
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                         else
@@ -98,6 +101,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
 
     private void sendVerificationCode(String number)
     {
+        System.out.println("In sendVerificationCode\n");
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
                 60,

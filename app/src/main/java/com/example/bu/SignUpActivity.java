@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,6 +26,9 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import org.w3c.dom.Text;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +39,9 @@ public class SignUpActivity extends AppCompatActivity
     public static final String LAST_NAME = "last name";
     public static final String PHONE_NUMBER = "phone number";
     public static final String ZIP_CODE = "zipcode";
+    public static final String PASSWORD = "password";
+
+    private FirebaseUser user;
 
 
     private DocumentReference to_upload;
@@ -56,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity
         //final EditText phone_num_s_up =(EditText) findViewById(R.id.editText_phone_number);
         final EditText zipcode = (EditText) findViewById(R.id.editText_zip_code);
         final TextView phone_num_s = (TextView) findViewById(R.id.editText_phone_number);
+        final EditText password = (EditText) findViewById(R.id.editText_password);
 
         final String phone_num = extras.getString("phone");
 
@@ -76,12 +84,13 @@ public class SignUpActivity extends AppCompatActivity
 
                // phone_num = phone_num.replaceAll("[^0-9]","");
                 String zip = String.valueOf(zipcode.getText());
+                String passpass = String.valueOf(password.getText());
 
                 int ready_for_verification_code = 0;
 
 
 
-                if(f_name.isEmpty() || l_name.isEmpty() || zip.isEmpty())
+                if(f_name.isEmpty() || l_name.isEmpty() || zip.isEmpty() || passpass.isEmpty())
                 {
                     if(f_name.isEmpty())
                     {
@@ -96,6 +105,11 @@ public class SignUpActivity extends AppCompatActivity
                     if(zip.isEmpty())
                     {
                         zipcode.setError("ZIP CANNOT BE EMPTY!" + "");
+                    }
+
+                    if(passpass.isEmpty())
+                    {
+                        password.setError("PLEASE ENTER PASSWORD!" + "");
                     }
                 }
 
@@ -142,11 +156,22 @@ public class SignUpActivity extends AppCompatActivity
                         zipcode.setError("ENTER VALID ZIPCODE");
                         ready_for_verification_code = 0;
                     }
+
+                    if(passpass.length() < 6)
+                    {
+                        password.setError("PASSWORD MUST BE GREATER THAN 6 CHARACTERS");
+                        ready_for_verification_code = 0;
+                    }
+
+                    else
+                    {
+                        ready_for_verification_code++;
+                    }
                 }
 
                 System.out.println("Ready indicator: " + ready_for_verification_code);
 
-                if(ready_for_verification_code == 3)
+                if(ready_for_verification_code == 4)
                 {
                     //meaning all the info in the sign up field is valid and ready for phone number verification
                     //get the data ready to be stored
@@ -156,9 +181,14 @@ public class SignUpActivity extends AppCompatActivity
                     data_to_save.put(LAST_NAME, l_name);
                     data_to_save.put(PHONE_NUMBER, phone_num);
                     data_to_save.put(ZIP_CODE, zip);
+                    data_to_save.put(PASSWORD, passpass);
 
                     //System.out.println("AAAAAAAA");
-                    to_upload = FirebaseFirestore.getInstance().document("users/" + UUID.randomUUID());
+
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    String user_uid = user.getUid();
+
+                    to_upload = FirebaseFirestore.getInstance().document("users/" + user_uid);//UUID.randomUUID());
 
 
 
@@ -192,5 +222,22 @@ public class SignUpActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    private static byte[] getSHA(String input) throws NoSuchAlgorithmException
+    {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+        return md.digest(input.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String mix_it_up(String pw)
+    {
+        String pass = "M" + pw + "z3";
+        System.out.println("Secret is: " + pass + "\n" );
+
+
+
+        return pass;
     }
 }

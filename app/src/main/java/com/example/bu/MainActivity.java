@@ -11,11 +11,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
 
     List<AuthUI .IdpConfig> providers;
 
@@ -23,6 +30,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //if user already signed in, then go straight to home screen
+        if (user != null)
+        {
+            Intent i = new Intent(MainActivity.this, HomeScreenActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            System.out.println("USER is: " + user.getUid() +"\n");
+            startActivity(i);
+        }
 
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.PhoneBuilder().build()
