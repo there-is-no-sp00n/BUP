@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -27,6 +28,8 @@ public class SignInVerificationActivity extends AppCompatActivity {
     private String phone_num;
     private EditText text_input;
 
+    private FirebaseUser current_user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
 
         phAuth = FirebaseAuth.getInstance();
 
+
         final Bundle extras = getIntent().getExtras();
 
         phone_num = extras.getString("phone");
@@ -43,6 +47,8 @@ public class SignInVerificationActivity extends AppCompatActivity {
 
 
         sendVerificationCode(phone_num);
+
+        //verifyCode(code);
 
         findViewById(R.id.button_verify_code).setOnClickListener(new View.OnClickListener()
         {
@@ -72,8 +78,16 @@ public class SignInVerificationActivity extends AppCompatActivity {
     private void verifyCode(String code)
     {
         System.out.println("In verifyCode\n");
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
-        signInWithCred(credential);
+        try
+        {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
+            signInWithCred(credential);
+        }
+        catch (Exception e)
+        {
+            text_input.setError("INVALID CODE");
+        }
+
     }
 
     private void signInWithCred(PhoneAuthCredential credential)
@@ -102,6 +116,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
     private void sendVerificationCode(String number)
     {
         System.out.println("In sendVerificationCode\n");
+
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,
                 60,
@@ -109,6 +124,13 @@ public class SignInVerificationActivity extends AppCompatActivity {
                 TaskExecutors.MAIN_THREAD,
                 mCallBack
         );
+
+        System.out.println("In sendVerificationCode2\n");
+
+
+        //  current_user = phAuth.getCurrentUser();
+
+       // System.out.println("User to sign is: " + current_user.getUid() + "\n");
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -118,6 +140,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken)
         {
+            System.out.println("IN onCodeSent\n");
             super.onCodeSent(s, forceResendingToken);
             verificationID = s;
         }
@@ -129,6 +152,7 @@ public class SignInVerificationActivity extends AppCompatActivity {
             if(code != null)
             {
                 verifyCode(code);
+                System.out.println("VERIFY DONE\n");
             }
         }
 

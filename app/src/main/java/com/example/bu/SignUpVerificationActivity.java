@@ -82,8 +82,16 @@ public class SignUpVerificationActivity extends AppCompatActivity {
     private void verifyCode(String code)
     {
         System.out.println("Sign up: In verifyCode\n");
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
-        signInWithCred(credential);
+        try
+        {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
+            signInWithCred(credential);
+        }
+
+        catch (Exception e)
+        {
+            text_input.setError("INVALID CODE");
+        }
     }
 
     private void signInWithCred(PhoneAuthCredential credential)

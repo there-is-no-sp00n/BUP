@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import org.w3c.dom.Text;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -165,6 +166,17 @@ public class SignUpActivity extends AppCompatActivity
 
                     else
                     {
+                        String temp_string = passpass;
+                        try
+                        {
+                            passpass = mix_it_up(getSHA(passpass));
+                        }
+
+                        catch (NoSuchAlgorithmException e)
+                        {
+                            System.out.println("Exception thrown! \n");
+                        }
+
                         ready_for_verification_code++;
                     }
                 }
@@ -224,20 +236,29 @@ public class SignUpActivity extends AppCompatActivity
         });
     }
 
-    private static byte[] getSHA(String input) throws NoSuchAlgorithmException
+    private byte[] getSHA(String pw) throws NoSuchAlgorithmException
     {
+        System.out.println("Secret before salt is: " + pw +"\n");
+        String pass = "M" + pw + "z3";
+        System.out.println("Secret after salt is: " + pass + "\n" );
+
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-        return md.digest(input.getBytes(StandardCharsets.UTF_8));
+        return md.digest(pw.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String mix_it_up(String pw)
+    private String mix_it_up(byte[] hash)
     {
-        String pass = "M" + pw + "z3";
-        System.out.println("Secret is: " + pass + "\n" );
+        BigInteger num = new BigInteger(1, hash);
 
+        StringBuilder hexString = new StringBuilder(num.toString(16));
 
+        while(hexString.length() < 32)
+        {
+            hexString.insert(0, "0");
+        }
 
-        return pass;
+        System.out.println("Hidded Secret is: " + hexString.toString() + "\n");
+        return hexString.toString();
     }
 }
